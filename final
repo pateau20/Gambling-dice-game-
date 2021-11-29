@@ -1,3 +1,6 @@
+//need to make sure balances aren't negative, organization, comments
+//Also need to change the game rules so that they win a percentage of the money remaining in their opponents balance so
+//we can avoid negative numbers
 
 import java.util.Scanner;
 public class DiceGame {
@@ -14,18 +17,19 @@ public class DiceGame {
         double winNumberp2;
         double playerOneTotal = 0;
         double playerTwoTotal = 0;
+        int i;
 
 
         System.out.println("Reminder both players must have the same bet size with a minimum of 10 dollars");
         System.out.print("How much would you like to bet? ");
         bet = scnr1.nextInt();  // take user input of the bet size
-
         if (bet >= 10) {
             bigEnough = true;     // check to see if bet is large enough to play
             playerOneTotal = bet;
             playerTwoTotal = bet;
 
-        } else {
+        }
+        else {
             while (!bigEnough) {        // if bet isn't large enough prompt the user until your bet is large enough
                 System.out.println("Your bet isn't big enough try again");
                 System.out.println("Reminder you must have the same bet with a minimum of 10 dollars");
@@ -38,7 +42,7 @@ public class DiceGame {
 
         numRolls = howManyRolls();  //call method how many rolls to get user input of how many rolls per game
 
-        System.out.print("In order to roll the dice each time, type the word 'roll' and press the enter key ");
+        System.out.print("In order to roll the dice each time, type the word 'roll' and press the enter key "); //WHAT DOES THIS MEAN?
 
 
         int roundNum = 1;
@@ -46,23 +50,21 @@ public class DiceGame {
         while (numRolls > 0) {
             toRollOrNot = scnr1.next();
             int rollP1 = dice();    // get the actual input from the dice machine to print later.
-            System.out.println();   // Player one's roll
+            System.out.println();
             System.out.printf("ROUND %d has commenced!!!", roundNum);
             System.out.println();
             System.out.printf("Player %d you have rolled a %d\n", player, rollP1);
-
             if (player == 1) {
                 player = 2;
             } else {
                 player = 1;
             }
-
-            int rollP2 = dice();            //player twos dice roll
+            int rollP2 = dice();
             System.out.printf("Player %d you have rolled a %d\n", player, rollP2);
 
 
-            winNumberp1 = calculateWinner(player, numRolls, bet, rollP1, rollP2);
-            winNumberp2 = calculateWinner(player, numRolls, bet, rollP1, rollP2);       // calculate the winner of each round
+            winNumberp1 = calculateWinner(player, numRolls, playerOneTotal, rollP1, rollP2);
+            winNumberp2 = calculateWinner(player, numRolls, playerTwoTotal, rollP1, rollP2);       // calculate the winner of each round
 
             if (playerNumber == 1) {
                 playerNumber = 2;
@@ -71,14 +73,42 @@ public class DiceGame {
             }
 
 
+
+            //format this to only print out two decimal pales for winNumberp1 and winNumberp2
+
             if (player == 1) {
-                System.out.printf("Player %d you have won %.2f of player 2's initial bet of %d", player, winNumberp1, bet);
+
+                //code for slowing down the output  DOESNT WORK
+                for (i = 0; i < 500000000; i++) {
+                    int timeDelay = 0;
+                    timeDelay++;
+                    int timeDelay1 = 0;
+                    timeDelay1++;
+                    int timeDelay2 = 0;
+                    timeDelay2++;
+                    int timeDelay3 = 0;
+                    timeDelay3++;
+                }
+                System.out.printf("Player %d you have won %.2f of player 2's initial bet of %d",player, winNumberp1, bet);
                 System.out.println();
                 playerOneTotal = playerOneTotal + winNumberp1;
                 playerTwoTotal = playerTwoTotal - winNumberp1;
                 player = 2;
-            } else {                  //print out amount won between the two players
-                System.out.printf("Player %d you have won %.2f of player 1's initial bet of %d", player, winNumberp1, bet);
+            }
+            else if (player == 2){
+
+                //code for slowing down the output  DOESNT WORK
+                for (i = 0; i < 500000000; i++) {
+                    int timeDelay = 0;
+                    timeDelay++;
+                    int timeDelay1 = 0;
+                    timeDelay1++;
+                    int timeDelay2 = 0;
+                    timeDelay2++;
+                    int timeDelay3 = 0;
+                    timeDelay3++;
+                }
+                System.out.printf("Player %d you have won %.2f of player 1's initial bet of %d",player, winNumberp1, bet);
                 System.out.println();
                 playerTwoTotal = playerTwoTotal + winNumberp2;
                 playerOneTotal = playerOneTotal - winNumberp2;
@@ -91,14 +121,16 @@ public class DiceGame {
 
         System.out.println();
         System.out.println("THIS GAME IS NOW OVER");
-        System.out.printf("Player 1, you have a total balance of: %.2f\n", playerOneTotal);
+        System.out.printf("Player 1, you have a total balance of: %.2f\n",playerOneTotal);
         System.out.printf("Player 2, you have a total balance of %.2f\n", playerTwoTotal);
 
         if (playerOneTotal > playerTwoTotal) {
-            System.out.println("Congrats Player 1, you are the winner!!");          //print out winners and end the game
-        } else if (playerTwoTotal > playerOneTotal) {
+            System.out.println("Congrats Player 1, you are the winner!!");
+        }
+        else if (playerTwoTotal > playerOneTotal) {
             System.out.println("Congrats Player 2, you are the winner!!");
-        } else {
+        }
+        else {
             System.out.println("You have both tied");
         }
 
@@ -112,7 +144,7 @@ public class DiceGame {
                 " Both players play against each other meaning that there is no house to cover the bets." +
                 " Both players roll one dice. The player with the higher dice roll wins the percent difference between their roll and the" +
                 " other player's rolls  in the player's initial buy-in. " +
-                "In a nutshell the other person wins what the other loses. WARNING YOU CAN LOOSE MORE MONEY THAN YOU ACTUALLY PUT IN THE GAME!");
+                "In a nutshell the other person wins what the other loses. ");
         System.out.println();
         System.out.println("Example: \n" +
                 "\n" +
@@ -152,7 +184,10 @@ public class DiceGame {
     }
 
 
-    public static double calculateWinner(int player, int numRolls, int bet, int playerOneRoll, int playerTwoRoll) {
+    //this would be a good thing to output into a different class because we will be able to get the value of
+    //the score subtracted or added to the new score and put it back into the regular code
+
+    public static double calculateWinner(int player, int numRolls, double score, int playerOneRoll, int playerTwoRoll) {
         double winningAmount = 0;
         double[] sum1 = new double[numRolls];                // create an array to store the sum value of a won
         double[] sum2 = new double[numRolls];
@@ -160,18 +195,18 @@ public class DiceGame {
         double difference;
         double percentDifference = 0;
 
-        for (i = 0; i < sum1.length; i++) {
+        for (i = 0; i < sum1.length; i++ ) {
             sum1[i] = playerOneRoll;
             sum2[i] = playerTwoRoll;
 
             if (sum1[i] >= sum2[i]) {
                 difference = sum1[i] - sum2[i];
-                percentDifference = (difference / sum2[i]) * bet;
+                percentDifference = (difference / sum1[i]) * score;
                 break;
-
-            } else {
+            }
+            else {
                 difference = sum2[i] - sum1[i];
-                percentDifference = (difference / sum1[i]) * bet;
+                percentDifference = (difference / sum2[i]) * score;
                 break;
 
             }
@@ -181,3 +216,5 @@ public class DiceGame {
 
     }
 }
+
+
